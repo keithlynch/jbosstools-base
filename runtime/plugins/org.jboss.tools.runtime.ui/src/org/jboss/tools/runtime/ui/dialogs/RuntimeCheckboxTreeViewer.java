@@ -1,4 +1,4 @@
-package org.jboss.tools.runtime.ui;
+package org.jboss.tools.runtime.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.jboss.tools.runtime.core.model.RuntimeDefinition;
 import org.jboss.tools.runtime.core.model.RuntimePath;
+import org.jboss.tools.runtime.ui.internal.Messages;
 
 public class RuntimeCheckboxTreeViewer extends CheckboxTreeViewer {
 	public RuntimeCheckboxTreeViewer(Composite parent, final Set<RuntimePath> runtimePaths2, int heightHint) {

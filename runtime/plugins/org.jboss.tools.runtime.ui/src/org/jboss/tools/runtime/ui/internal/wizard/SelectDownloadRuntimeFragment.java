@@ -32,12 +32,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.jboss.tools.foundation.ui.taskwizard.IWizardHandle;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.RuntimeCoreActivator;
 import org.jboss.tools.runtime.core.model.DownloadRuntime;
-import org.jboss.tools.runtime.ui.Messages;
 import org.jboss.tools.runtime.ui.dialogs.AutoResizeTableLayout;
-import org.jboss.tools.runtime.ui.taskwizard.IWizardHandle;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
+import org.jboss.tools.runtime.ui.internal.Messages;
 import org.jboss.tools.runtime.ui.wizard.DownloadRuntimesTaskWizard;
 
 /**

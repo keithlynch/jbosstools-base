@@ -98,7 +98,7 @@ public class Trace implements DebugOptionsListener {
 			return;
 		}
 		if (Trace.STRING_SEVERE.equals(level)) {
-			RuntimeUIActivator.log(t, s);
+			RuntimeUIActivator.pluginLog().logError(s,t);
 		}
 		if (RuntimeUIActivator.getDefault().isDebugging()) {
 			final StringBuilder sb = new StringBuilder(RuntimeUIActivator.PLUGIN_ID);

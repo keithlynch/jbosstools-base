@@ -10,35 +10,22 @@
  ************************************************************************************/
 package org.jboss.tools.runtime.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.service.debug.DebugOptions;
 import org.eclipse.osgi.service.debug.DebugOptionsListener;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.jboss.tools.foundation.core.plugin.log.IPluginLog;
-import org.jboss.tools.foundation.core.plugin.log.PluginLog;
-import org.jboss.tools.foundation.core.plugin.log.StatusFactory;
+import org.jboss.tools.foundation.ui.plugin.BaseUIPlugin;
+import org.jboss.tools.foundation.ui.plugin.BaseUISharedImages;
 import org.jboss.tools.runtime.core.RuntimeCoreActivator;
 import org.jboss.tools.runtime.core.model.IRuntimeDetector;
 import org.jboss.tools.runtime.core.model.RuntimeDefinition;
 import org.jboss.tools.runtime.core.model.RuntimeModel;
 import org.jboss.tools.runtime.core.model.RuntimePath;
-import org.jboss.tools.runtime.core.util.RuntimeInitializerUtil;
 import org.jboss.tools.runtime.core.util.RuntimeModelUtil;
 import org.jboss.tools.runtime.ui.dialogs.SearchRuntimePathDialog;
 import org.jboss.tools.runtime.ui.download.DownloadRuntimes;
@@ -51,55 +38,20 @@ import org.osgi.framework.BundleContext;
  * @author snjeza
  * 
  */
-public class RuntimeUIActivator extends AbstractUIPlugin {
+public class RuntimeUIActivator extends BaseUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.jboss.tools.runtime.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static RuntimeUIActivator plugin;
-
-	private static IEclipsePreferences prefs;
-
-	public static final String LASTPATH = "lastPath"; //$NON-NLS-1$
-
-	public static final String RUNTIME_PATHS = "runtimePaths"; //$NON-NLS-1$
-
-	public static final String PATH = "path"; //$NON-NLS-1$
-
-	public static final String RUNTIME_PATH = "runtimePath"; //$NON-NLS-1$
-
-	public static final String SCAN_ON_EVERY_STAERTUP = "scanOnEveryStartup"; //$NON-NLS-1$
-
-	public static final String FIRST_START = "firstStart"; //$NON-NLS-1$
-
-	public static final String PREFERENCES_VERSION = "version"; //$NON-NLS-1$
-
 	private BundleContext context;
 	private RuntimeModel runtimeModel;
-	private IPluginLog pluginLog = null;
-	private StatusFactory statusFactory = null;
 	
 	/**
 	 * The constructor
 	 */
 	public RuntimeUIActivator() {
-	}
-
-	protected IPluginLog pluginLogInternal() {
-		if( pluginLog == null )
-			pluginLog = new PluginLog(this);
-		return pluginLog;
-	}
-	
-	/**
-	 * Get a status factory for this plugin
-	 * @return status factory
-	 */
-	protected StatusFactory statusFactoryInternal() {
-		if( statusFactory == null ) 
-			statusFactory = new StatusFactory(getBundle().getSymbolicName());
-		return statusFactory;
 	}
 	
 	public BundleContext getBundleContext() {
@@ -145,90 +97,42 @@ public class RuntimeUIActivator extends AbstractUIPlugin {
 
 	public RuntimeModel getModel() {
 		if (runtimeModel == null) {
-			runtimeModel = new RuntimeModel(getPreferences());
+			runtimeModel = new RuntimeModel(ConfigurationScope.INSTANCE.getNode(PLUGIN_ID));
 		}
 		return runtimeModel;
 	}
-	
-	public static void log(Throwable e) {
-		IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, e.getLocalizedMessage(), e);
-		RuntimeUIActivator.getDefault().getLog().log(status);
-	}
-	
-	public static void log(Throwable e, String message) {
-		IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, message, e);
-		RuntimeUIActivator.getDefault().getLog().log(status);
-	}
-	
-	public static void log(String message) {
-		IStatus status = new Status(IStatus.WARNING, PLUGIN_ID,message);
-		RuntimeUIActivator.getDefault().getLog().log(status);
-	}
-	
-	public static RuntimeCheckboxTreeViewer createRuntimeViewer(final RuntimePath[] runtimePaths2, Composite composite, int heightHint) {
-		return new RuntimeCheckboxTreeViewer(composite, runtimePaths2, heightHint);
-	}
 
-	public static RuntimeCheckboxTreeViewer createRuntimeViewer(final Set<RuntimePath> runtimePaths2, Composite composite, int heightHint) {
-		return new RuntimeCheckboxTreeViewer(composite, runtimePaths2, heightHint);
-	}
-
+	@Deprecated
 	public static SearchRuntimePathDialog launchSearchRuntimePathDialog(Shell shell, 
 			final RuntimePath[] runtimePaths, boolean needRefresh, int heightHint) {
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) 
-					throws InvocationTargetException, InterruptedException {
-				RuntimeInitializerUtil.createRuntimeDefinitions(runtimePaths, monitor);
-			}
-		};
-		try {
-			HashSet<RuntimePath> set = new HashSet<RuntimePath>(Arrays.asList(runtimePaths));
-			
-			SearchRuntimePathDialog dialog = new SearchRuntimePathDialog(shell, set, needRefresh, heightHint);
-			dialog.run(true, true, op);
-			return dialog;
-		} catch (InvocationTargetException e1) {
-			RuntimeUIActivator.log(e1);
-		} catch (InterruptedException e1) {
-			// ignore
-		}
-		return null;
+		return SearchRuntimePathDialog.launchSearchRuntimePathDialog(shell, runtimePaths, needRefresh, heightHint);
 	}
 	
-	public static void refreshRuntimes(Shell shell, final RuntimePath[] runtimePaths, 
-			final RuntimeCheckboxTreeViewer viewer, boolean needRefresh) {
-		SearchRuntimePathDialog dialog = launchSearchRuntimePathDialog(
-				shell, runtimePaths, needRefresh, 15);
-		if (viewer != null) {
-			dialog.getShell().addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					viewer.updateInput(runtimePaths);
-				}
-			});
-		}
+	public static IPluginLog pluginLog() {
+		return getDefault().pluginLogInternal();
 	}
+	
 
-	public static boolean runtimeExists(RuntimeDefinition runtimeDefinition) {
-		return RuntimeModelUtil.verifyRuntimeDefinitionCreated(runtimeDefinition, false);
-	}
-	
 	public void saveRuntimePreferences() {
 		getModel().saveRuntimePaths();
 		RuntimeCoreActivator.getDefault().saveEnabledDetectors();
 	}
-
-	private static IEclipsePreferences getPreferences() {
-		if (prefs == null) {
-			prefs = ConfigurationScope.INSTANCE.getNode(PLUGIN_ID);
-		}
-		return prefs;
-	}
 	
+	@Override
 	public RuntimeSharedImages getSharedImages() {
 		return RuntimeSharedImages.getDefault();
 	}
 	
-	/* These are all deprecated and shouldn't be used */
+	protected BaseUISharedImages createSharedImages() {
+		return getSharedImages();
+	}
+
+	
+	/*
+	 *  These are all deprecated and shouldn't be used.
+	 *  I tried to remove them, but some test classes 
+	 *  in javaee are still using them.  
+	 */
 	@Deprecated
 	public List<RuntimeDefinition> getServerDefinitions() {
 		return RuntimeModelUtil.getRuntimeDefinitions(getModel().getRuntimePaths());

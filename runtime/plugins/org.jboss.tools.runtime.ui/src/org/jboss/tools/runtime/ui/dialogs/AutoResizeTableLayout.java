@@ -21,7 +21,7 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.jboss.tools.runtime.ui.Messages;
+import org.jboss.tools.runtime.ui.internal.Messages;
 
 public class AutoResizeTableLayout extends TableLayout implements
         ControlListener {

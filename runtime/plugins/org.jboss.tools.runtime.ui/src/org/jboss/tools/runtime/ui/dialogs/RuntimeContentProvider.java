@@ -8,7 +8,7 @@
  * Contributors:
  *     JBoss by Red Hat - Initial implementation.
  ************************************************************************************/
-package org.jboss.tools.runtime.ui;
+package org.jboss.tools.runtime.ui.dialogs;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class RuntimeContentProvider implements ITreeContentProvider {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		serverDefinitions = (List<RuntimeDefinition>) newInput;
 	}

@@ -12,7 +12,7 @@ package org.jboss.tools.runtime.ui.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 
 public class AuthenticatorUIWrapper {
 	private static final String PROP_AUTH_ID = "authenticatorId"; //$NON-NLS-1$

@@ -18,16 +18,16 @@ import java.util.Map;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+import org.jboss.tools.foundation.core.tasks.TaskModel;
+import org.jboss.tools.foundation.ui.taskwizard.TaskWizard;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.RuntimeCoreActivator;
 import org.jboss.tools.runtime.core.model.DownloadRuntime;
 import org.jboss.tools.runtime.core.model.IDownloadRuntimeFilter;
-import org.jboss.tools.runtime.ui.Messages;
+import org.jboss.tools.runtime.ui.internal.Messages;
 import org.jboss.tools.runtime.ui.internal.wizard.DownloadRuntimeLicenseFragment;
 import org.jboss.tools.runtime.ui.internal.wizard.FinalizeRuntimeDownloadFragment;
 import org.jboss.tools.runtime.ui.internal.wizard.SelectDownloadRuntimeFragment;
-import org.jboss.tools.runtime.ui.taskwizard.TaskModel;
-import org.jboss.tools.runtime.ui.taskwizard.TaskWizard;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
 
 /**
  * A public API class representing the DownloadRuntimes wizard.

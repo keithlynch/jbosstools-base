@@ -43,12 +43,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.progress.IProgressService;
+import org.jboss.tools.foundation.ui.taskwizard.IWizardHandle;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.model.DownloadRuntime;
-import org.jboss.tools.runtime.ui.Messages;
 import org.jboss.tools.runtime.ui.RuntimeUIActivator;
-import org.jboss.tools.runtime.ui.internal.wizard.util.DownloadRuntimeOperationUtility;
-import org.jboss.tools.runtime.ui.taskwizard.IWizardHandle;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
+import org.jboss.tools.runtime.ui.internal.Messages;
 import org.jboss.tools.runtime.ui.wizard.DownloadRuntimesTaskWizard;
 
 /**
@@ -166,7 +165,7 @@ public class FinalizeRuntimeDownloadFragment extends WizardFragment {
 						URL url = new URL(humanUrl);
 						support.getExternalBrowser().openURL(url);
 					} catch (Exception e1) {
-						RuntimeUIActivator.log(e1);
+						RuntimeUIActivator.pluginLog().logError(e1);
 						final String message = e1.getMessage();
 						Display.getDefault().syncExec(new Runnable() {
 
@@ -320,7 +319,7 @@ public class FinalizeRuntimeDownloadFragment extends WizardFragment {
 						URL url = new URL(linkUrl); 
 						support.getExternalBrowser().openURL(url);
 					} catch (Exception e1) {
-						RuntimeUIActivator.log(e1);
+						RuntimeUIActivator.pluginLog().logError(e1);
 						final String message = e1.getMessage();
 						Display.getDefault().syncExec(new Runnable() {
 
@@ -597,7 +596,7 @@ public class FinalizeRuntimeDownloadFragment extends WizardFragment {
 	
 	private static void openErrorMessage(final String title, final String msg, boolean log) {
 		if( log )
-			RuntimeUIActivator.log(msg);
+			RuntimeUIActivator.pluginLog().logError(msg);
 		openErrorMessage("Error", msg); //$NON-NLS-1$
 	}
 	

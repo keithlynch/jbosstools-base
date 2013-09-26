@@ -26,14 +26,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.jboss.tools.foundation.core.tasks.TaskModel;
+import org.jboss.tools.foundation.ui.taskwizard.IWizardHandle;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.model.DownloadRuntime;
 import org.jboss.tools.runtime.core.model.IDownloadRuntimeAuthenticator;
-import org.jboss.tools.runtime.ui.Messages;
 import org.jboss.tools.runtime.ui.RuntimeUIActivator;
 import org.jboss.tools.runtime.ui.RuntimeUIExtensionManager;
-import org.jboss.tools.runtime.ui.taskwizard.IWizardHandle;
-import org.jboss.tools.runtime.ui.taskwizard.TaskModel;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
+import org.jboss.tools.runtime.ui.internal.Messages;
 import org.jboss.tools.runtime.ui.wizard.DownloadRuntimesTaskWizard;
 
 /**
@@ -95,7 +95,8 @@ public class DownloadRuntimeLicenseFragment extends WizardFragment {
 			if( wf != null )
 				list.add(wf);
 			else {
-				IStatus s = new Status(IStatus.ERROR, RuntimeUIActivator.PLUGIN_ID, "No UI present for the given DownloadRuntime's authenticator.");
+				IStatus s = new Status(IStatus.ERROR, RuntimeUIActivator.PLUGIN_ID,
+						NLS.bind(Messages.MissingAuthenticatorUI, authId));
 				RuntimeUIActivator.getDefault().getLog().log(s);
 			}
 		}

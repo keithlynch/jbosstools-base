@@ -8,7 +8,7 @@
  * Contributors:
  *     JBoss by Red Hat
  *******************************************************************************/
-package org.jboss.tools.runtime.ui.internal.wizard.util;
+package org.jboss.tools.runtime.ui.internal.wizard;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -39,9 +39,9 @@ import org.jboss.tools.foundation.core.ecf.URLTransportUtility;
 import org.jboss.tools.runtime.core.model.RuntimeDefinition;
 import org.jboss.tools.runtime.core.model.RuntimePath;
 import org.jboss.tools.runtime.core.util.RuntimeInitializerUtil;
-import org.jboss.tools.runtime.ui.Messages;
 import org.jboss.tools.runtime.ui.RuntimeUIActivator;
-import org.jboss.tools.runtime.ui.internal.wizard.IOverwrite;
+import org.jboss.tools.runtime.ui.dialogs.SearchRuntimePathDialog;
+import org.jboss.tools.runtime.ui.internal.Messages;
 
 /*
  * This is a whole bunch of methods that were burried inside UI which seem horrible 
@@ -150,7 +150,7 @@ public class DownloadRuntimeOperationUtility {
 		} else if (runtimeDefinitions.size() > 1) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					RuntimeUIActivator.launchSearchRuntimePathDialog(
+					SearchRuntimePathDialog.launchSearchRuntimePathDialog(
 							Display.getDefault().getActiveShell(),
 							RuntimeUIActivator.getDefault().getModel().getRuntimePaths(), false, 7);
 				}

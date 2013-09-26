@@ -1,3 +1,13 @@
+/*************************************************************************************
+ * Copyright (c) 2013 Red Hat, Inc. and others.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     JBoss by Red Hat - Initial implementation.
+ ************************************************************************************/
 package org.jboss.tools.runtime.core.internal;
 
 import java.util.ArrayList;
@@ -30,18 +40,14 @@ public class RuntimeExtensionManager {
 	private static final String RUNTIME_DETECTOR_EXTENSION_ID = "org.jboss.tools.runtime.core.runtimeDetectors"; //$NON-NLS-1$
 	public static final String DOWNLOAD_RUNTIMES_PROVIDER_EXTENSION_ID = "org.jboss.tools.runtime.core.downloadRuntimeProvider"; //$NON-NLS-1$
 	
-	@Deprecated
-	public static final String DOWNLOAD_RUNTIMES_EXTENSION_ID = "org.jboss.tools.runtime.core.downloadruntimes"; //$NON-NLS-1$
-	
-	
+	// Member variables
 	private IDownloadRuntimesProvider[] downloadRuntimeProviders = null;
-
-	// JBoss Runtime files, TO BE REMOVED
-	private static final String NAME = "name"; //$NON-NLS-1$
-	// property keyys for download runtime provider ext pt. 
-	private static final String CLAZZ = "class"; //$NON-NLS-1$
-
+	private Set<IRuntimeDetector> runtimeDetectors;
 	
+
+	// property keyys for download runtime provider ext pt. 
+	private static final String NAME = "name"; //$NON-NLS-1$
+	private static final String CLAZZ = "class"; //$NON-NLS-1$
 	// property keys for runtime detector ext.pt.
 	private static final String PREFERENCE_ID = "preferenceId"; //$NON-NLS-1$
 	private static final String ID = "id"; //$NON-NLS-1$
@@ -63,10 +69,27 @@ public class RuntimeExtensionManager {
 	 * This method should not be public :( 
 	 * @return
 	 */
-	public Set<IRuntimeDetector> loadInitializedRuntimeDetectors() {
+	private Set<IRuntimeDetector> loadInitializedRuntimeDetectors() {
 		Set<IRuntimeDetector> tmp = loadDeclaredRuntimeDetectors();
 		initializeRuntimeDetectorEnablement(tmp);
 		return tmp;
+	}
+	
+	public synchronized Set<IRuntimeDetector> getRuntimeDetectors() {
+		if (runtimeDetectors == null) {
+			runtimeDetectors = RuntimeExtensionManager.getDefault().loadInitializedRuntimeDetectors();
+		}
+		return runtimeDetectors;
+	}
+
+
+	public IRuntimeDetector findRuntimeDetector(String id) {
+		for (IRuntimeDetector detector:getRuntimeDetectors()) {
+			if (id.equals(detector.getId())) {
+				return detector;
+			}
+		}
+		return null;
 	}
 	
 	private void initializeRuntimeDetectorEnablement(Set<IRuntimeDetector> set) {
@@ -135,7 +158,7 @@ public class RuntimeExtensionManager {
 			detector.setEnabled(Boolean.parseBoolean(enabled));
 			return detector;
 		} catch (CoreException e) {
-			RuntimeCoreActivator.getDefault().logError(e);
+			RuntimeCoreActivator.pluginLog().logError(e);
 			return new InvalidRuntimeDetector(name, id, preferenceId, priority);
 		}
 	}
@@ -190,18 +213,6 @@ public class RuntimeExtensionManager {
 		}
 		return null;
 	}
-
-	
-	/**
-	 * This method never should have been public, but 
-	 * it must remain since it is technically API. 
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public Map<String, DownloadRuntime> loadDownloadRuntimes() {
-		return loadDownloadRuntimes(new NullProgressMonitor());
-	}
 	
 	private Map<String, DownloadRuntime> loadDownloadRuntimes(IProgressMonitor monitor) {
 		HashMap<String, DownloadRuntime> tmp = new HashMap<String, DownloadRuntime>();
@@ -255,7 +266,7 @@ public class RuntimeExtensionManager {
 					IDownloadRuntimesProvider provider = (IDownloadRuntimesProvider)configurationElement.createExecutableExtension(CLAZZ);
 					list.add(provider);
 				} catch(CoreException ce) {
-					RuntimeCoreActivator.getDefault().logError("Error loading download runtime provider", ce);
+					RuntimeCoreActivator.pluginLog().logError("Error loading download runtime provider", ce);
 				}
 			}
 		}

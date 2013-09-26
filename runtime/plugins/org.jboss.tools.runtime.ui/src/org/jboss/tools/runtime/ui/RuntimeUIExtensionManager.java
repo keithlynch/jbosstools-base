@@ -18,10 +18,16 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.model.IDownloadRuntimeAuthenticator;
 import org.jboss.tools.runtime.ui.internal.AuthenticatorUIWrapper;
-import org.jboss.tools.runtime.ui.taskwizard.WizardFragment;
+import org.jboss.tools.runtime.ui.internal.Trace;
 
+/**
+ * A class in charge of loading any and all 
+ * extensions for this plugin. 
+ * 
+ */
 public class RuntimeUIExtensionManager {
 	public static final String DOWNLOAD_RUNTIMES_UI_EXTENSION_ID = "org.jboss.tools.runtime.ui.downloadRuntimeAuthenticatorUI"; //$NON-NLS-1$
 
@@ -48,7 +54,7 @@ public class RuntimeUIExtensionManager {
 			try {
 				return wrapper.createWizardFragment();
 			} catch(CoreException ce) {
-				RuntimeUIActivator.log(ce);
+				RuntimeUIActivator.pluginLog().logError(ce);
 			}
 		}
 		return null;
@@ -66,6 +72,7 @@ public class RuntimeUIExtensionManager {
 					.getConfigurationElements();
 			for (int j = 0; j < configurationElements.length; j++) {
 				AuthenticatorUIWrapper dec = loadOneAuthenticatorUI(configurationElements[j]); 
+				Trace.trace(Trace.STRING_EXTENSION_POINT, "Loaded authenticator UI wrapper for authenticator id " + dec.getAuthenticatorId()); //$NON-NLS-1$
 				tmp.put(dec.getAuthenticatorId(), dec);
 			}
 		}
