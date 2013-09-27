@@ -10,7 +10,12 @@
  ******************************************************************************/
 package org.jboss.tools.foundation.core;
 
+import java.util.Hashtable;
+
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.osgi.service.debug.DebugOptionsListener;
+import org.jboss.tools.foundation.core.plugin.AbstractTrace;
 import org.jboss.tools.foundation.core.plugin.BaseCorePlugin;
 import org.jboss.tools.foundation.core.plugin.log.IPluginLog;
 import org.jboss.tools.foundation.core.plugin.log.StatusFactory;
