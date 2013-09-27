@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.jboss.tools.foundation.core.tasks.TaskModel;
-import org.jboss.tools.foundation.ui.taskwizard.TaskWizard;
-import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
+import org.jboss.tools.foundation.ui.xpl.taskwizard.TaskWizard;
+import org.jboss.tools.foundation.ui.xpl.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.RuntimeCoreActivator;
 import org.jboss.tools.runtime.core.model.DownloadRuntime;
 import org.jboss.tools.runtime.core.model.IDownloadRuntimeFilter;
@@ -40,6 +40,8 @@ import org.jboss.tools.runtime.ui.internal.wizard.SelectDownloadRuntimeFragment;
  * to provide a UI for their authentication efforts, and
  * to eventually add a URL into the task model 
  * for use by the final page of the wizard. 
+ * 
+ * @Since 3.0
  *
  */
 public class DownloadRuntimesTaskWizard extends TaskWizard {

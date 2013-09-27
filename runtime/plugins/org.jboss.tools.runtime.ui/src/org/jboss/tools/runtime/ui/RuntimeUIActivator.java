@@ -10,17 +10,13 @@
  ************************************************************************************/
 package org.jboss.tools.runtime.ui;
 
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
-import org.eclipse.osgi.service.debug.DebugOptions;
-import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.swt.widgets.Shell;
 import org.jboss.tools.foundation.core.plugin.log.IPluginLog;
 import org.jboss.tools.foundation.ui.plugin.BaseUIPlugin;
-import org.jboss.tools.foundation.ui.plugin.BaseUISharedImages;
 import org.jboss.tools.runtime.core.RuntimeCoreActivator;
 import org.jboss.tools.runtime.core.model.IRuntimeDetector;
 import org.jboss.tools.runtime.core.model.RuntimeDefinition;
@@ -28,7 +24,6 @@ import org.jboss.tools.runtime.core.model.RuntimeModel;
 import org.jboss.tools.runtime.core.model.RuntimePath;
 import org.jboss.tools.runtime.core.util.RuntimeModelUtil;
 import org.jboss.tools.runtime.ui.dialogs.SearchRuntimePathDialog;
-import org.jboss.tools.runtime.ui.download.DownloadRuntimes;
 import org.jboss.tools.runtime.ui.internal.Trace;
 import org.osgi.framework.BundleContext;
 
@@ -66,12 +61,7 @@ public class RuntimeUIActivator extends BaseUIPlugin {
 		super.start(context);
 		plugin = this;
 		this.context = context;
-		RuntimeCoreActivator.getDefault().setDownloader(new DownloadRuntimes());
-		
-		// register the debug options listener
-		final Hashtable<String, String> props = new Hashtable<String, String>(4);
-		props.put(DebugOptions.LISTENER_SYMBOLICNAME, PLUGIN_ID);
-		context.registerService(DebugOptionsListener.class.getName(), new Trace(), props);
+		super.registerDebugOptionsListener(PLUGIN_ID, new Trace(this), context);
 	}
 
 	/*
@@ -79,7 +69,6 @@ public class RuntimeUIActivator extends BaseUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		RuntimeCoreActivator.getDefault().setDownloader(null);
 		saveRuntimePreferences();
 		runtimeModel = null;
 		plugin = null;
@@ -123,9 +112,11 @@ public class RuntimeUIActivator extends BaseUIPlugin {
 		return RuntimeSharedImages.getDefault();
 	}
 	
-	protected BaseUISharedImages createSharedImages() {
-		return getSharedImages();
+	public static RuntimeSharedImages sharedImages() {
+		return getDefault().getSharedImages();
 	}
+	
+	
 
 	
 	/*

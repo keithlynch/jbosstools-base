@@ -39,7 +39,6 @@ public class RuntimeCoreActivator extends BaseCorePlugin {
 	private static RuntimeCoreActivator plugin;
 
 	private BundleContext context;
-	private IDownloadRuntimes downloader = null;
 	
 	/**
 	 * The constructor
@@ -77,14 +76,6 @@ public class RuntimeCoreActivator extends BaseCorePlugin {
 
 	public BundleContext getBundleContext() {
 		return context;
-	}
-	
-	public IDownloadRuntimes getDownloader() {
-		return downloader;
-	}
-	
-	public void setDownloader(IDownloadRuntimes downloader) {
-		this.downloader = downloader;
 	}
 	
 	// TODO figure out a better place for this
