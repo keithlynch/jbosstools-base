@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat, Inc. - initial API and implementation
  ******************************************************************************/
-package org.jboss.tools.runtime.ui;
+package org.jboss.tools.runtime.ui.internal;
 
 import java.util.HashMap;
 
@@ -20,8 +20,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.jboss.tools.foundation.ui.taskwizard.WizardFragment;
 import org.jboss.tools.runtime.core.model.IDownloadRuntimeAuthenticator;
-import org.jboss.tools.runtime.ui.internal.AuthenticatorUIWrapper;
-import org.jboss.tools.runtime.ui.internal.Trace;
+import org.jboss.tools.runtime.ui.RuntimeUIActivator;
 
 /**
  * A class in charge of loading any and all 
